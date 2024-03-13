@@ -5,6 +5,10 @@ import csv
 from datetime import datetime, timedelta
 import locale
 import copy
+from docx import Document
+
+# Create a new Document
+doc = Document()
 
 # If we want to print or export the roster
 EXPORT = True
@@ -14,7 +18,7 @@ PRINT = True
 REMOVE = True
 
 # Amount of weeks for the roster
-roster_length = 45
+roster_length = 60
 
 # Define tasks and their requirements
 tasks = {
@@ -50,6 +54,15 @@ roommates = [
     'Mathis'
 ]
 
+# Add a table to the document
+table = doc.add_table(rows=1, cols=4)
+
+# Add headers to the table
+hdr_cells = table.rows[0].cells
+hdr_cells[0].text = 'Datum'
+hdr_cells[1].text = 'Woonkamer'
+hdr_cells[2].text = 'Gang'
+hdr_cells[3].text = 'Toiletten'
 
 def create_dates(roster_length):
     """
@@ -92,10 +105,17 @@ def create_output(weeks_with_tasks, dates):
         gang = ', '.join(team_with_tasks['tasks']['Gang'])
         wc = ', '.join(team_with_tasks['tasks']['Toiletten'])
         data.append({'Datum': date, 'Woonkamer': woonkamer, 'Gang': gang, 'Toiletten': wc})
+    print(data)
     if PRINT:
         for d in data:
             print(d)
+
     if EXPORT:
+        for row_data in data:
+            row_cells = table.add_row().cells
+            for i, key in enumerate(row_data.keys()):
+                row_cells[i].text = row_data[key]
+        doc.save('date_table.docx')
         # Create DataFrame
         df = pd.DataFrame(data)
         #

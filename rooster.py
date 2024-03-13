@@ -105,7 +105,6 @@ def create_output(weeks_with_tasks, dates):
         gang = ', '.join(team_with_tasks['tasks']['Gang'])
         wc = ', '.join(team_with_tasks['tasks']['Toiletten'])
         data.append({'Datum': date, 'Woonkamer': woonkamer, 'Gang': gang, 'Toiletten': wc})
-    print(data)
     if PRINT:
         for d in data:
             print(d)
